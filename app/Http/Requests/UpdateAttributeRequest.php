@@ -38,7 +38,7 @@ class UpdateAttributeRequest extends FormRequest
             'unit' => ['nullable', 'string', 'max:50'],
             'is_required' => ['sometimes', 'boolean'],
             'is_filterable' => ['sometimes', 'boolean'],
-            'options' => ['nullable', 'array', 'required_if:type,select,multiselect', 'min:1'],
+            'options' => ['nullable', 'array'],
             'options.*' => ['nullable', 'string', 'max:255'],
             'categories' => ['nullable', 'array'],
             'categories.*.selected' => ['nullable', 'boolean'],
