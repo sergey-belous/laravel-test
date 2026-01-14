@@ -34,7 +34,10 @@ class StoreAttributeRequest extends FormRequest
             'is_required' => ['sometimes', 'boolean'],
             'is_filterable' => ['sometimes', 'boolean'],
             'options' => ['nullable', 'array', 'required_if:type,select,multiselect', 'min:1'],
-            'options.*' => ['string', 'max:255'],
+            'options.*' => ['nullable', 'string', 'max:255'],
+            'categories' => ['nullable', 'array'],
+            'categories.*.selected' => ['nullable', 'boolean'],
+            'categories.*.is_required' => ['nullable', 'boolean'],
         ];
     }
 }

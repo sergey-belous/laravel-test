@@ -56,12 +56,48 @@
         </div>
         <template x-for="(option, index) in options" :key="index">
             <div class="flex items-center space-x-2">
-                <x-text-input x-bind:name="`options[${index}]`" type="text" class="block w-full" x-model="options[index]" x-bind:placeholder="`Опция ${index + 1}`" />
+                <x-text-input name="options[]" type="text" class="block w-full" x-model="options[index]" x-bind:placeholder="`Опция ${index + 1}`" />
                 <button type="button" class="text-red-600 text-sm hover:underline" @click="removeOption(index)" x-show="options.length > 1">Удалить</button>
             </div>
         </template>
         <x-input-error :messages="collect($errors->get('options.*'))->flatten()->all()" class="mt-1" />
         <x-input-error :messages="$errors->get('options')" class="mt-1" />
+    </div>
+
+    <noscript>
+        <div class="space-y-2 mt-4">
+            <x-input-label value="Опции (для select/multiselect)" />
+            @php
+                $fallbackOptions = old('options', $attribute->options ?? []);
+                $fallbackOptions = is_array($fallbackOptions) && count($fallbackOptions) ? $fallbackOptions : [''];
+                $fallbackCount = max(3, count($fallbackOptions));
+            @endphp
+            @for ($i = 0; $i < $fallbackCount; $i++)
+                <x-text-input name="options[]" type="text" class="block w-full" value="{{ $fallbackOptions[$i] ?? '' }}" placeholder="Опция {{ $i + 1 }}" />
+            @endfor
+            <x-input-error :messages="collect($errors->get('options.*'))->flatten()->all()" class="mt-1" />
+            <x-input-error :messages="$errors->get('options')" class="mt-1" />
+        </div>
+    </noscript>
+
+    <div class="space-y-2">
+        <h3 class="font-semibold">Категории, где используется характеристика</h3>
+        @foreach ($categories as $category)
+            @php
+                $pivot = $attribute->categories->firstWhere('id', $category->id)?->pivot;
+            @endphp
+            <div class="flex items-center space-x-3 border rounded p-3">
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="categories[{{ $category->id }}][selected]" value="1" @checked(old("categories.{$category->id}.selected", $pivot?->is_required !== null))>
+                    <span>{{ $category->name }}</span>
+                </label>
+                <label class="flex items-center space-x-2">
+                    <input type="checkbox" name="categories[{{ $category->id }}][is_required]" value="1" @checked(old("categories.{$category->id}.is_required", $pivot?->is_required))>
+                    <span class="text-sm text-gray-600">Обязательное для категории</span>
+                </label>
+            </div>
+        @endforeach
+        <x-input-error :messages="collect($errors->get('categories.*'))->flatten()->all()" class="mt-1" />
     </div>
 
     <div class="pt-2">

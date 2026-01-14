@@ -26,6 +26,7 @@
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Родитель</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Характеристики</th>
                                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
                             </tr>
                         </thead>
@@ -35,6 +36,22 @@
                                     <td class="px-4 py-2">{{ $category->name }}</td>
                                     <td class="px-4 py-2">{{ $category->parent?->name ?? '—' }}</td>
                                     <td class="px-4 py-2">{{ $category->slug }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($category->attributes->isEmpty())
+                                            <span class="text-gray-500">—</span>
+                                        @else
+                                            <div class="space-y-1">
+                                                @foreach ($category->attributes as $attribute)
+                                                    <div class="text-sm">
+                                                        {{ $attribute->name }}
+                                                        @if ($attribute->pivot?->is_required)
+                                                            <span class="text-xs text-red-600">(обяз.)</span>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2 text-right space-x-2">
                                         <a href="{{ route('admin.categories.edit', $category) }}" class="text-indigo-600 hover:underline">Редактировать</a>
                                         <form action="{{ route('admin.categories.destroy', $category) }}" method="POST" class="inline">

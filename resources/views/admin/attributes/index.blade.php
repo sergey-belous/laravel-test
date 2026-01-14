@@ -25,6 +25,7 @@
                             <tr>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Название</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Тип</th>
+                                <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Категории</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Обяз.</th>
                                 <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Фильтр</th>
                                 <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
@@ -35,6 +36,22 @@
                                 <tr>
                                     <td class="px-4 py-2">{{ $attribute->name }}</td>
                                     <td class="px-4 py-2">{{ $attribute->type }}</td>
+                                    <td class="px-4 py-2">
+                                        @if ($attribute->categories->isEmpty())
+                                            <span class="text-gray-500">—</span>
+                                        @else
+                                            <div class="space-y-1">
+                                                @foreach ($attribute->categories as $category)
+                                                    <div class="text-sm">
+                                                        {{ $category->name }}
+                                                        @if ($category->pivot?->is_required)
+                                                            <span class="text-xs text-red-600">(обяз.)</span>
+                                                        @endif
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                    </td>
                                     <td class="px-4 py-2">{{ $attribute->is_required ? 'Да' : 'Нет' }}</td>
                                     <td class="px-4 py-2">{{ $attribute->is_filterable ? 'Да' : 'Нет' }}</td>
                                     <td class="px-4 py-2 text-right space-x-2">
